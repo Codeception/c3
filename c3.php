@@ -33,14 +33,13 @@ if (!class_exists('Codeception')) {
 }
 
 // Load Codeception Config
+$config_file = realpath(__DIR__).DIRECTORY_SEPARATOR.'codeception.yml';
 if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
-    $custom_config_file = $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
-    if (!file_exists($custom_config_file))
-        throw new Exception(sprintf("Codeception config file '%s' not found", $custom_config_file));
-    $config = \Codeception\Configuration::config($custom_config_file);
-} else {
-    $config = \Codeception\Configuration::config();
+    $config_file = realpath(__DIR__).DIRECTORY_SEPARATOR.$_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
+    if (!file_exists($config_file))
+        throw new Exception(sprintf("Codeception config file '%s' not found", $config_file));
 }
+\Codeception\Configuration::config($config_file);
 
 __c3_prepare();
 
