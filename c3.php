@@ -66,19 +66,16 @@ if ($requested_c3_report) {
     switch (ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/')) {
         case 'clear':
             __c3_clear();
-            break;
-
+            exit;
         case 'html':
             __c3_send_file(__c3_build_html_report($codeCoverage, $path));
-            break;
-
+            exit;
         case 'clover':
             __c3_send_file(__c3_build_clover_report($codeCoverage, $path));
-            break;
-
+            exit;
         case 'serialized':
             __c3_send_file($complete_report);
-            break;
+            exit;
     }
 
 } else {
