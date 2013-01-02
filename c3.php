@@ -16,7 +16,7 @@ if (C3_CODECOVERAGE_DEBUG) {
 }
 
 if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
-    return;
+    exit;
 }
 
 // Autoload Codeception classes
@@ -32,7 +32,7 @@ __c3_prepare();
 
 if (!class_exists('Codeception')) {
     __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used')
-    return;
+    exit;
 }
 
 // Load Codeception Config
