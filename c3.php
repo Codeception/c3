@@ -28,8 +28,11 @@ if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
     require_once 'Codeception/autoload.php';
 }
 
+__c3_prepare();
+
 if (!class_exists('Codeception')) {
-    throw new Exception('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
+    file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE.'/errors.log', 'Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
+    return;
 }
 
 // Load Codeception Config
@@ -41,7 +44,7 @@ if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
 }
 \Codeception\Configuration::config($config_file);
 
-__c3_prepare();
+
 
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
@@ -70,6 +73,8 @@ if ($requested_c3_report) {
         case 'clover':
             __c3_send_file(__c3_build_clover_report($codeCoverage, $path));
             break;
+        case 'errors':
+            __c3_send_file(realpath(C3_CODECOVERAGE_MEDIATE_STORAGE).'/errors.log');
 
         case 'serialized':
             __c3_send_file($complete_report);
