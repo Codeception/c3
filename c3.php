@@ -31,7 +31,7 @@ if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
 __c3_prepare();
 
 if (!class_exists('Codeception')) {
-    file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE.'/errors.log', 'Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
+    __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used')
     return;
 }
 
@@ -40,11 +40,9 @@ $config_file = realpath(__DIR__).DIRECTORY_SEPARATOR.'codeception.yml';
 if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
     $config_file = realpath(__DIR__).DIRECTORY_SEPARATOR.$_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
     if (!file_exists($config_file))
-        throw new Exception(sprintf("Codeception config file '%s' not found", $config_file));
+        __c3_error(sprintf("Codeception config file '%s' not found", $config_file));
 }
 \Codeception\Configuration::config($config_file);
-
-
 
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
@@ -66,6 +64,10 @@ if ($requested_c3_report) {
     $codeCoverage = __c3_factory($complete_report);
 
     switch (ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/')) {
+        case 'clear':
+            __c3_clear();
+            break;
+
         case 'html':
             __c3_send_file(__c3_build_html_report($codeCoverage, $path));
             break;
@@ -73,8 +75,6 @@ if ($requested_c3_report) {
         case 'clover':
             __c3_send_file(__c3_build_clover_report($codeCoverage, $path));
             break;
-        case 'errors':
-            __c3_send_file(realpath(C3_CODECOVERAGE_MEDIATE_STORAGE).'/errors.log');
 
         case 'serialized':
             __c3_send_file($complete_report);
@@ -175,6 +175,18 @@ function __c3_factory($filename)
     $c3 = new \Codeception\CodeCoverage($phpCoverage);
     return $c3->getPhpCodeCoverage();
 }
+
+function __c3_error($message)
+{
+    file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . time().'-error.txt', $message);
+    if (!headers_sent()) header('HTTP_X_CODECEPTION_CODECOVERAGE_ERROR', $message);
+}
+
+function __c3_clear()
+{
+    \Codeception\Util\Filesystem::doEmptyDir(C3_CODECOVERAGE_MEDIATE_STORAGE);
+}
+
 
 
 // @codeCoverageIgnoreEnd
