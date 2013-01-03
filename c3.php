@@ -177,7 +177,7 @@ function __c3_factory($filename)
         : new PHP_CodeCoverage();
 
     $suite = trim($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
-    if ($suite == 'remote-access' or !$suite) {
+    if (($suite == 'remote-access') or !$suite) {
         $settings = \Codeception\Configuration::config();
     } else {
         $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
