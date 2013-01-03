@@ -28,21 +28,24 @@ if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
     require_once 'Codeception/autoload.php';
 }
 
-__c3_prepare();
-
-if (!class_exists('Codeception')) {
+if (!class_exists('\\Codeception\\Codecept')) {
     __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
-    return;
 }
 
 // Load Codeception Config
 $config_file = realpath(__DIR__).DIRECTORY_SEPARATOR.'codeception.yml';
 if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
     $config_file = realpath(__DIR__).DIRECTORY_SEPARATOR.$_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
-    if (!file_exists($config_file))
-        __c3_error(sprintf("Codeception config file '%s' not found", $config_file));
 }
-\Codeception\Configuration::config($config_file);
+if (!file_exists($config_file)) {
+    __c3_error(sprintf("Codeception config file '%s' not found", $config_file));
+}
+
+try {
+    \Codeception\Configuration::config($config_file);
+} catch (\Exception $e) {
+    __c3_error($e->getMessage());
+}
 
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
@@ -61,12 +64,16 @@ if ($requested_c3_report) {
         rename($current_report, $complete_report);
     }
 
+    $route = ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/');
+
+    if ($route == 'clear') {
+        __c3_clear();
+        exit;
+    }
+
     $codeCoverage = __c3_factory($complete_report);
 
-    switch (ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/')) {
-        case 'clear':
-            __c3_clear();
-            exit;
+    switch ($route) {
         case 'html':
             __c3_send_file(__c3_build_html_report($codeCoverage, $path));
             exit;
@@ -167,16 +174,26 @@ function __c3_factory($filename)
 {
     $phpCoverage = is_readable($filename)
         ? unserialize(file_get_contents($filename))
-        : null;
+        : new PHP_CodeCoverage();
 
-    $c3 = new \Codeception\CodeCoverage($phpCoverage);
-    return $c3->getPhpCodeCoverage();
+    $suite = trim($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
+    if ($suite == 'remote-access' or !$suite) {
+        $settings = \Codeception\Configuration::config();
+    } else {
+        $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
+    }
+    \Codeception\CodeCoverageSettings::setup($phpCoverage)
+        ->filterWhiteList($settings)
+        ->filterBlackList($settings);
+
+    return $phpCoverage;
 }
 
 function __c3_error($message)
 {
     file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . time().'-error.txt', $message);
-    if (!headers_sent()) header('HTTP_X_CODECEPTION_CODECOVERAGE_ERROR', $message);
+    if (!headers_sent()) header('X-Codeception-CodeCoverage-Error', str_replace("\n",' ', $message));
+    exit;
 }
 
 function __c3_clear()
