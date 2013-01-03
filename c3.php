@@ -19,17 +19,19 @@ if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
     return;
 }
 
-// Autoload Codeception classes
-if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
-} elseif (file_exists(__DIR__ . '/codecept.phar')) {
-    require_once __DIR__ . '/codecept.phar/autoload.php';
-} elseif (stream_resolve_include_path('Codeception/autoload.php')) {
-    require_once 'Codeception/autoload.php';
-}
+__c3_prepare();
 
+// Autoload Codeception classes
 if (!class_exists('\\Codeception\\Codecept')) {
-    __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
+    if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
+        require_once __DIR__ . '/vendor/autoload.php';
+    } elseif (file_exists(__DIR__ . '/codecept.phar')) {
+        require_once __DIR__ . '/codecept.phar/autoload.php';
+    } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
+        require_once 'Codeception/autoload.php';
+    } else {
+        __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
+    }
 }
 
 // Load Codeception Config
@@ -46,6 +48,8 @@ try {
 } catch (\Exception $e) {
     __c3_error($e->getMessage());
 }
+
+
 
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
@@ -160,7 +164,6 @@ function __c3_prepare()
     defined('C3_CODECOVERAGE_PROJECT_ROOT')
         || define('C3_CODECOVERAGE_PROJECT_ROOT', __DIR__);
 
-    define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
     if (!is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE)) {
         mkdir(C3_CODECOVERAGE_MEDIATE_STORAGE, 0777, true);
     }
@@ -180,7 +183,11 @@ function __c3_factory($filename)
     if (($suite == 'remote-access') or !$suite) {
         $settings = \Codeception\Configuration::config();
     } else {
-        $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
+        try {
+            $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
+        } catch (Exception $e) {
+            return new PHP_CodeCoverage();
+        }
     }
     \Codeception\CodeCoverageSettings::setup($phpCoverage)
         ->filterWhiteList($settings)
@@ -198,7 +205,7 @@ function __c3_error($message)
 
 function __c3_clear()
 {
-    \Codeception\Util\Filesystem::doEmptyDir(C3_CODECOVERAGE_MEDIATE_STORAGE);
+    \Codeception\Util\FileSystem::doEmptyDir(C3_CODECOVERAGE_MEDIATE_STORAGE);
 }
 
 
