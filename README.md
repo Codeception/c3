@@ -1,13 +1,13 @@
 ## Remote CodeCoverage for Codeception
 
 This file `c3.php` should be included into the application you are testing in the very first line.
-It will start remote code coverage collection. It will be stored to disk and retrieved by `codeception` when tests from the suite are finished.
+It will start remote code coverage collection. Coverage data will be stored to disk and retrieved by `codeception` when tests from the suite are finished.
 This file won't affect your application in any way. It is executed **only** when a special header `X-Codeception-CodeCoverage` is sent. 
 In any other case your aplication run as usually with no overheads.
 
 ### Local Code Coverage
 
-If you don't run tests on remote server, but use webserver (Apache, Nginx, PhpWebserver) you need c3.php installed just the same way.
+If you don't run tests on remote server but a use webserver (Apache, Nginx, PhpWebserver) you need c3.php installed just the same way.
 In this case coverage result will be merged with local code coverage.
 
 ### Installation
