@@ -2,7 +2,7 @@
 
 This file `c3.php` should be included into the application you are testing in the very first line.
 It will start remote code coverage collection, then save it to disk, and submit it to local server, when testing ends.
-This file won't affect your application in any way. It is executed **only** when a special header is sent. 
+This file won't affect your application in any way. It is executed **only** when a special header `X-Codeception-CodeCoverage` is sent. 
 If it's not your aplication will continue normal execution.
 
 ### Local Code Coverage
