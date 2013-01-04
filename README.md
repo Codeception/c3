@@ -33,7 +33,7 @@ App::start();
 ?>
 ```
 
-Now when Codeception launches test suite with enabled code coverage you will receive code coverage data from teh remote server.
+Now on when is Codeception launched with code coverage enabled you will receive a coverage report from this remote server.
 
 ### Configuration
 
