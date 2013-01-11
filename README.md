@@ -65,13 +65,29 @@ Codeception will access routes in order to receive collected coverage report in 
 * `c3/report/html`
 * `c3/report/clean`
 
+## Debug
+
+In case you got into troubles and remote debugging still doesn't start you can try the following. Edit `c3.php` file and remove the header check
+
+``` php
+// to remove
+if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
+    return;
+}
+```
+then add this line to the top of file:
+
+``` php
+$_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
+```
+
+now access `http://yourhost/c3/report/clean` url and see if it has errors. Please check that error_reporting is set to E_ALL
+
 ## Temp directories
 
 In root of your project `c3tmp` dir will be created during code coverage. 
 It will not be deleted after suite ends for testing and debugging purposes.
 Serialized data as well as xml and html code coverage reports will be stores there.
-
-
 
 
 
