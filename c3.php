@@ -117,7 +117,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     {
         file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . time() . '-error.txt', $message);
         if (!headers_sent()) {
-            header('X-Codeception-CodeCoverage-Error', str_replace("\n", ' ', $message));
+            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
         }
         __c3_exit();
     }
