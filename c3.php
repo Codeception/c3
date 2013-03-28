@@ -169,7 +169,7 @@ $requested_c3_report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
 $current_report = $path;
 $complete_report = $path . '.serialized';
 
-if ($requested_c3_report) {
+if (!$requested_c3_report) {
 
     set_time_limit(0);
     if (file_exists($current_report)) {
