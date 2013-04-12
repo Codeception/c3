@@ -129,7 +129,9 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 }
 
 if (!is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE)) {
-    mkdir(C3_CODECOVERAGE_MEDIATE_STORAGE, 0777, true);
+    if (mkdir(C3_CODECOVERAGE_MEDIATE_STORAGE, 0777, true) === false) {
+        __c3_error('Failed to create directory "' . C3_CODECOVERAGE_MEDIATE_STORAGE . '"');
+    }
 }
 
 // Autoload Codeception classes
