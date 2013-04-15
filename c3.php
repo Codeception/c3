@@ -129,7 +129,9 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 }
 
 if (!is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE)) {
-    mkdir(C3_CODECOVERAGE_MEDIATE_STORAGE, 0777, true);
+    if (mkdir(C3_CODECOVERAGE_MEDIATE_STORAGE, 0777, true) === false) {
+        __c3_error('Failed to create directory "' . C3_CODECOVERAGE_MEDIATE_STORAGE . '"');
+    }
 }
 
 // Autoload Codeception classes
@@ -191,13 +193,25 @@ if ($requested_c3_report) {
 
     switch ($route) {
         case 'html':
-            __c3_send_file(__c3_build_html_report($codeCoverage, $path));
+            try {
+                __c3_send_file(__c3_build_html_report($codeCoverage, $path));
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
             return __c3_exit();
         case 'clover':
-            __c3_send_file(__c3_build_clover_report($codeCoverage, $path));
+            try {
+                __c3_send_file(__c3_build_clover_report($codeCoverage, $path));
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
             return __c3_exit();
         case 'serialized':
-            __c3_send_file($complete_report);
+            try {
+                __c3_send_file($complete_report);
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
             return __c3_exit();
     }
 
