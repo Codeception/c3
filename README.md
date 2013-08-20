@@ -2,18 +2,17 @@
 
 This file `c3.php` should be included into the application you are testing in the very first line.
 It will start remote code coverage collection. Coverage data will be stored to disk and retrieved by `codeception` when tests from the suite are finished.
-This file won't affect your application in any way. It is executed **only** when a special header `X-Codeception-CodeCoverage` is sent. 
-In any other case your aplication run as usually with no overheads.
+This file won't affect your application in any way. It is executed **only** when a special header `X-Codeception-CodeCoverage` is sent. Alternatively, if you use Selenium, special cookie `CODECEPTION_CODECOVERAGE` is used. In any other case your application run as usually with no overheads.
 
 ### Local Code Coverage
 
-If you don't run tests on remote server but a use webserver (Apache, Nginx, PhpWebserver) you need c3.php installed just the same way.
+If you don't run tests on remote server but use a webserver (Apache, Nginx, PhpWebserver) you need c3.php installed just the same way.
 In this case coverage result will be merged with local code coverage.
 
 ### Installation
 
 File `c3.php` should be put in project root, into the same directory where `codeception.yml` config is located.
-Also, make sure Codeception is available on remote server eiter in phar/pear/composer packages.
+Also, make sure Codeception is available on remote server either in phar/pear/composer packages.
 
 ```
 wget https://raw.github.com/Codeception/c3/master/c3.php
@@ -88,6 +87,3 @@ now access `http://yourhost/c3/report/clean` url and see if it has errors. Pleas
 In root of your project `c3tmp` dir will be created during code coverage. 
 It will not be deleted after suite ends for testing and debugging purposes.
 Serialized data as well as xml and html code coverage reports will be stores there.
-
-
-
