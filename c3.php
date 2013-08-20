@@ -8,7 +8,7 @@
  * @author tiger
  */
 
-if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
+if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER) && !isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     return;
 }
 
