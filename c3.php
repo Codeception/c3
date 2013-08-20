@@ -8,7 +8,19 @@
  * @author tiger
  */
 
-if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER) && !isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
+// $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
+
+if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
+    $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
+
+    if ($cookie) {    
+        foreach ($cookie as $key => $value) {
+            $_SERVER["HTTP_X_CODECEPTION_".strtoupper($key)] = $value;
+        }
+    }
+}
+
+if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
     return;
 }
 
@@ -83,6 +95,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             ? unserialize(file_get_contents($filename))
             : new PHP_CodeCoverage();
 
+
         if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'])) {
             $suite = $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'];
             try {
@@ -119,6 +132,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         if (!headers_sent()) {
             header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
         }
+        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
         __c3_exit();
     }
 
@@ -170,9 +184,7 @@ $requested_c3_report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
 
 $current_report = $path;
 $complete_report = $path . '.serialized';
-
 if ($requested_c3_report) {
-
     set_time_limit(0);
     if (file_exists($current_report)) {
         if (file_exists($complete_report)) {
@@ -219,10 +231,8 @@ if ($requested_c3_report) {
     if (file_exists($complete_report)) {
         unlink($complete_report);
     }
-
     $codeCoverage = __c3_factory($current_report);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
-
     register_shutdown_function(
         function () use ($codeCoverage, $current_report) {
             $codeCoverage->stop();
