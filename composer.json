@@ -1,0 +1,30 @@
+{
+    "name":"codeception/c3",
+    "description":"CodeCoverage collector for Codeception",
+    "keywords":["code coverage", "CodeCoverage"],
+    "homepage":"http://codeception.com/",
+    "type":"library",
+    "license":"MIT",
+    "authors":[
+        {
+            "name":"Michael Bodnarchuk",
+            "email":"davert.php@resend.cc",
+            "homepage":"http://codegyre.com"
+        }
+    ],
+    "minimum-stability": "stable",
+
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Codeception\\c3": "."
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Codeception\\c3\\Installer::copyC3ToRoot"
+        ]
+    }
+}
