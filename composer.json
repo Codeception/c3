@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Codeception\\c3": "."
+            "Codeception\\c3\\": "."
         }
     },
     "scripts": {
