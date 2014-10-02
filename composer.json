@@ -25,6 +25,9 @@
     "scripts": {
         "post-install-cmd": [
             "Codeception\\c3\\Installer::copyC3ToRoot"
+        ],
+        "post-update-cmd": [
+            "Codeception\\c3\\Installer::copyC3ToRoot"
         ]
     }
 }
