@@ -6,7 +6,7 @@ This file won't affect your application in any way. It is executed **only** when
 
 ### Local Code Coverage
 
-If you don't run tests on remote server but use a webserver (Apache, Nginx, PhpWebserver) you need c3.php installed just the same way.
+If you don't run tests on remote server but use a webserver (Apache, Nginx, PhpWebserver) you need `c3.php` installed just the same way.
 In this case coverage result will be merged with local code coverage.
 
 ### Installation
@@ -38,7 +38,7 @@ post-install hooks will copy `c3.php` to the project root.
 ### Manually
 
 ```
-wget https://raw.github.com/Codeception/c3/master/c3.php
+wget https://raw.github.com/Codeception/c3/2.0/c3.php
 ```
 
 Now you should include c3.php in your front script, like `index.php`.
