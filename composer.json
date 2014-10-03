@@ -21,13 +21,5 @@
         "psr-4": {
             "Codeception\\c3\\": "."
         }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "Codeception\\c3\\Installer::copyC3ToRoot"
-        ],
-        "post-update-cmd": [
-            "Codeception\\c3\\Installer::copyC3ToRoot"
-        ]
     }
 }

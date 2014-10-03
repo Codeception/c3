@@ -14,6 +14,29 @@ In this case coverage result will be merged with local code coverage.
 File `c3.php` should be put in project root, into the same directory where `codeception.yml` config is located.
 Also, make sure Codeception is available on remote server either in phar/pear/composer packages.
 
+### Via Composer
+
+Add to `composer.json`:
+
+```
+"require-dev": {
+        "codeception/codeception": "2.*",
+        "codeception/c3": "2.*"
+},
+"scripts": {
+    "post-install-cmd": [
+        "Codeception\\c3\\Installer::copyC3ToRoot"
+    ],
+    "post-update-cmd": [
+        "Codeception\\c3\\Installer::copyC3ToRoot"
+    ]
+}
+```
+
+post-install hooks will copy `c3.php` to the project root.
+
+### Manually
+
 ```
 wget https://raw.github.com/Codeception/c3/master/c3.php
 ```
