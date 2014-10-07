@@ -1,3 +1,5 @@
+**[Issues](https://github.com/Codeception/Codeception/issues)** | **[Usage Guide](http://codeception.com/docs/11-Codecoverage)**
+
 ## Remote CodeCoverage for Codeception
 
 This file `c3.php` should be included into the application you are testing in the very first line.
