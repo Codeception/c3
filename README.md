@@ -1,4 +1,4 @@
-**[Issues](https://github.com/Codeception/Codeception/issues)** (create new one with `[c3] ` prefix) | **[Usage Guide](http://codeception.com/docs/11-Codecoverage)**
+**[Issues](https://github.com/Codeception/Codeception/issues)** | **[Usage Guide](http://codeception.com/docs/11-Codecoverage)**
 
 ## Remote CodeCoverage for Codeception
 
