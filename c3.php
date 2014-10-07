@@ -227,12 +227,14 @@ if ($requested_c3_report) {
 } else {
     $codeCoverage = __c3_factory($current_report);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
-    register_shutdown_function(
-        function () use ($codeCoverage, $current_report) {
-            $codeCoverage->stop();
-            file_put_contents($current_report, serialize($codeCoverage));
-        }
-    );
+    if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) { 
+        register_shutdown_function(
+            function () use ($codeCoverage, $current_report) {
+                $codeCoverage->stop();
+                file_put_contents($current_report, serialize($codeCoverage));
+            }
+        );
+    }
 }
 
 // @codeCoverageIgnoreEnd
