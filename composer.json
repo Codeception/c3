@@ -7,6 +7,10 @@
     "license":"MIT",
     "authors":[
         {
+            "name": "Tiger Seo",
+            "email": "tiger.seo@gmail.com"
+        },
+        {
             "name":"Michael Bodnarchuk",
             "email":"davert.php@resend.cc",
             "homepage":"http://codegyre.com"
