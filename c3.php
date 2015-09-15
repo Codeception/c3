@@ -43,12 +43,14 @@ if (!function_exists('__c3_error')) {
 
 // Autoload Codeception classes
 if (!class_exists('\\Codeception\\Codecept')) {
-    if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
+    if (file_exists(__DIR__ . '/codecept.phar')) {
+        require_once 'phar://'.__DIR__ . '/codecept.phar/autoload.php';
+    } elseif (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
         require_once __DIR__ . '/vendor/autoload.php';
         // Required to load some methods only available at codeception/autoload.php
-        require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
-    } elseif (file_exists(__DIR__ . '/codecept.phar')) {
-        require_once 'phar://'.__DIR__ . '/codecept.phar/autoload.php';
+        if (stream_resolve_include_path(__DIR__ . '/vendor/codeception/codeception/autoload.php')) {
+            require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
+        }
     } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
         require_once 'Codeception/autoload.php';
     } else {
