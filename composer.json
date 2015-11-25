@@ -3,7 +3,7 @@
     "description":"CodeCoverage collector for Codeception",
     "keywords":["code coverage", "CodeCoverage"],
     "homepage":"http://codeception.com/",
-    "type":"library",
+    "type": "composer-plugin",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "license":"MIT",
