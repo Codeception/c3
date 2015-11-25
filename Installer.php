@@ -1,13 +1,46 @@
 <?php
 namespace Codeception\c3;
-use \Composer\Script\Event;
+use Composer\Package\PackageInterface;
+use Composer\Repository\InstalledRepositoryInterface;
+use Composer\Composer;
+use Composer\IO\IOInterface;
+use Composer\Plugin\PluginInterface;
+use Composer\Installer\LibraryInstaller;
 
-class Installer
+class InstallerPlugin implements PluginInterface
 {
-    public static function copyC3ToRoot(Event $event) {
-        $io = $event->getIO();
-        $io->write("<info>[c3]</info> Copying c3.php to the root of your project...");
-        copy(__DIR__.DIRECTORY_SEPARATOR.'c3.php', getcwd().DIRECTORY_SEPARATOR.'c3.php');
-        $io->write("<info>[c3]</info> Include c3.php into index.php in order to collect codecoverage from server scripts");
+    public function activate(Composer $composer, IOInterface $io)
+    {
+        $installer = new Installer($io, $composer);
+        $composer->getInstallationManager()->addInstaller($installer);
+    }
+}
+
+class Installer extends LibraryInstaller
+{
+    public function install(InstalledRepositoryInterface $repo, PackageInterface $package)
+    {
+        parent::install($repo, $package);
+        $this->filesystem->copyThenRemove($this->getInstallPath($package) . DIRECTORY_SEPARATOR . 'c3.php', 'c3.php');
+    }
+
+    public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
+    {
+        parent::update($repo, $initial, $target);
+        $this->filesystem->copyThenRemove($this->getInstallPath($target) . DIRECTORY_SEPARATOR . 'c3.php', 'c3.php');
+    }
+
+    public function uninstall(InstalledRepositoryInterface $repo, PackageInterface $package)
+    {
+        parent::uninstall($repo, $package);
+        $this->filesystem->remove('c3.php');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function supports($packageType)
+    {
+        return 'codeception-c3' === $packageType;
     }
 }

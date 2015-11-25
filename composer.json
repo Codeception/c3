@@ -4,18 +4,25 @@
     "keywords":["code coverage", "CodeCoverage"],
     "homepage":"http://codeception.com/",
     "type":"library",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "license":"MIT",
     "authors":[
         {
             "name":"Michael Bodnarchuk",
-            "email":"davert.php@resend.cc",
+            "email":"davert.php@codegyre.com",
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "stable",
-
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "composer-plugin-api": "1.0.0"
+    },
+    "require-dev": {
+        "composer/composer": "@dev"
+    },
+    "extra": {
+        "class": "Codeception\\c3\\InstallerPlugin"
     },
     "autoload": {
         "psr-4": {
