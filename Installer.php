@@ -4,6 +4,7 @@ use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
+use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 
 class Installer implements PluginInterface, EventSubscriberInterface
@@ -28,6 +29,12 @@ class Installer implements PluginInterface, EventSubscriberInterface
                 array('askForUpdate', 0)
             )
         );
+    }
+
+    public static function copyC3ToRoot(Event $event)
+    {
+        $event->getIO()->write("<warning>c3 is now a Composer Plugin and installs c3.php automatically.</warning>");
+        $event->getIO()->write("<warning>Please remove current \"post-install-cmd\" and \"post-update-cmd\" hooks from your composer.json</warning>");
     }
 
     public function copyC3()
