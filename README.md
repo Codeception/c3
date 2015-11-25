@@ -1,3 +1,5 @@
+**[Issues](https://github.com/Codeception/Codeception/issues)** | **[Usage Guide](http://codeception.com/docs/11-Codecoverage)**
+
 ## Remote CodeCoverage for Codeception
 
 This file `c3.php` should be included into the application you are testing in the very first line.
@@ -50,6 +52,7 @@ Example file: `web/index.php`:
 ``` php
 <?php
 
+define('C3_CODECOVERAGE_ERROR_LOG_FILE', '/path/to/c3_error.log'); //Optional (if not set the default c3 output dir will be used)
 include '/../c3.php';
 
 define('MY_APP_STARTED', true);
