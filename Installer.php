@@ -6,7 +6,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
 
-class InstallerPlugin implements PluginInterface, EventSubscriberInterface
+class Installer implements PluginInterface, EventSubscriberInterface
 {
     /**
      * @var IOInterface
@@ -32,25 +32,27 @@ class InstallerPlugin implements PluginInterface, EventSubscriberInterface
 
     public function copyC3()
     {
-        if ($this->c3HasChanged()) {
-            $this->io->write("<info>[c3]</info> c3.php is already up-to-date");
+        if ($this->c3NotChanged()) {
+            $this->io->write("<comment>[codeception/c3]</comment> c3.php is already up-to-date");
             return;
         }
 
-        $this->io->write("<info>[c3]</info> Copying c3.php to the root of your project...");
+        $this->io->write("<comment>[codeception/c3]</comment> Copying c3.php to the root of your project...");
         copy(__DIR__.DIRECTORY_SEPARATOR.'c3.php', getcwd().DIRECTORY_SEPARATOR.'c3.php');
-        $this->io->write("<info>[c3]</info> Include c3.php into index.php in order to collect codecoverage from server scripts");
+        $this->io->write("<comment>[codeception/c3]</comment> Include c3.php into index.php in order to collect codecoverage from server scripts");
     }
 
     public function askForUpdate()
     {
-        if (!$this->c3HasChanged()) return;
-        $replace = $this->io->askConfirmation("Do you want to replace c3.php with latest version?", false);
-        if (!$replace) return;
+        if ($this->c3NotChanged()) return;
+        if (file_exists(getcwd().DIRECTORY_SEPARATOR.'c3.php')) {
+            $replace = $this->io->askConfirmation("<warning>c3.php has changed</warning> Do you want to replace c3.php with latest version?", false);
+            if (!$replace) return;
+        }
         $this->copyC3();
     }
 
-    private function c3HasChanged()
+    private function c3NotChanged()
     {
         return file_exists(getcwd().DIRECTORY_SEPARATOR.'c3.php') &&
             md5_file(__DIR__.DIRECTORY_SEPARATOR.'c3.php') === md5_file(getcwd().DIRECTORY_SEPARATOR.'c3.php');
