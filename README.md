@@ -24,18 +24,10 @@ Add to `composer.json`:
 "require-dev": {
     "codeception/codeception": "2.*",
     "codeception/c3": "2.*"
-},
-"scripts": {
-    "post-install-cmd": [
-        "Codeception\\c3\\Installer::copyC3ToRoot"
-    ],
-    "post-update-cmd": [
-        "Codeception\\c3\\Installer::copyC3ToRoot"
-    ]
 }
 ```
 
-post-install hooks will copy `c3.php` to the project root.
+C3 installer will copy `c3.php` to the project root.
 
 #### Manually
 
