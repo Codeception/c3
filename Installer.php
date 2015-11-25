@@ -1,11 +1,12 @@
 <?php
 namespace Codeception\c3;
 use Composer\Composer;
+use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
 
-class InstallerPlugin implements PluginInterface
+class InstallerPlugin implements PluginInterface, EventSubscriberInterface
 {
     /**
      * @var IOInterface
