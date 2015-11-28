@@ -248,7 +248,14 @@ if ($requested_c3_report) {
     if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) { 
         register_shutdown_function(
             function () use ($codeCoverage, $current_report) {
+
                 $codeCoverage->stop();
+                if (!file_exists(dirname($current_report))) { // verify directory exists
+                    mkdir(dirname($current_report), 0777, true);
+                } else {
+                    __c3_error("Can't write CodeCoverage report into $current_report");
+                }
+
                 file_put_contents($current_report, serialize($codeCoverage));
             }
         );
