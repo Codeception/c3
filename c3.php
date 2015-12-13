@@ -251,9 +251,9 @@ if ($requested_c3_report) {
 
                 $codeCoverage->stop();
                 if (!file_exists(dirname($current_report))) { // verify directory exists
-                    mkdir(dirname($current_report), 0777, true);
-                } else {
-                    __c3_error("Can't write CodeCoverage report into $current_report");
+                    if(!mkdir(dirname($current_report), 0777, true)){
+                        __c3_error("Can't write CodeCoverage report into $current_report");
+                    }
                 }
 
                 file_put_contents($current_report, serialize($codeCoverage));
