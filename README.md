@@ -82,7 +82,7 @@ Codeception will access routes in order to receive collected coverage report in 
 * `c3/report/clover`
 * `c3/report/serialized`
 * `c3/report/html`
-* `c3/report/clean`
+* `c3/report/clear`
 
 ## Debug
 
@@ -100,7 +100,7 @@ then add this line to the top of file:
 $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
 ```
 
-now access `http://yourhost/c3/report/clean` url and see if it has errors. Please check that error_reporting is set to E_ALL
+now access `http://yourhost/c3/report/clear` url and see if it has errors. Please check that error_reporting is set to E_ALL
 
 ## Temp directories
 
