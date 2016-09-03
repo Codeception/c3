@@ -48,7 +48,7 @@ class Installer implements PluginInterface, EventSubscriberInterface
         }
 
         $this->io->write("<comment>[codeception/c3]</comment> Copying c3.php to the root of your project...");
-        copy(__DIR__.DIRECTORY_SEPARATOR.'c3.php', getcwd().DIRECTORY_SEPARATOR.'c3.php');
+        copy(__DIR__ . DIRECTORY_SEPARATOR . 'c3.php', getcwd() . DIRECTORY_SEPARATOR.'c3.php');
         $this->io->write("<comment>[codeception/c3]</comment> Include c3.php into index.php in order to collect codecoverage from server scripts");
     }
 
@@ -57,22 +57,24 @@ class Installer implements PluginInterface, EventSubscriberInterface
         if ($this->c3NotChanged()) {
             return;
         }
-        if (file_exists(getcwd().DIRECTORY_SEPARATOR.'c3.php')) {
+        if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
             $replace = $this->io->askConfirmation("<warning>c3.php has changed</warning> Do you want to replace c3.php with latest version?", false);
-            if (!$replace) return;
+            if (!$replace) {
+                return;
+            }
         }
         $this->copyC3();
     }
 
     private function c3NotChanged()
     {
-        return file_exists(getcwd().DIRECTORY_SEPARATOR.'c3.php') &&
-            md5_file(__DIR__.DIRECTORY_SEPARATOR.'c3.php') === md5_file(getcwd().DIRECTORY_SEPARATOR.'c3.php');
+        return file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php') &&
+            md5_file(__DIR__ . DIRECTORY_SEPARATOR . 'c3.php') === md5_file(getcwd() . DIRECTORY_SEPARATOR . 'c3.php');
     }
 
     public function deleteC3()
     {
-        if (file_exists(getcwd().DIRECTORY_SEPARATOR.'c3.php')) {
+        if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
             $this->io->write("<comment>[codeception/c3]</comment> Deleting c3.php from the root of your project...");
             unlink(getcwd() . DIRECTORY_SEPARATOR . 'c3.php');
         }
