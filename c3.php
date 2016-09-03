@@ -101,8 +101,13 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     // workaround for 'zend_mm_heap corrupted' problem
     gc_disable();
 
-    if ((integer)ini_get('memory_limit') < 384) {
-        ini_set('memory_limit', '384M');
+    $memoryLimit = ini_get('memory_limit');
+    $requiredMemory = '384M';
+    if ((substr($memoryLimit, -1) === 'M' && (int)$memoryLimit < (int)$requiredMemory)
+        || (substr($memoryLimit, -1) === 'K' && (int)$memoryLimit < (int)$requiredMemory * 1024)
+        || (ctype_digit($memoryLimit) && (int)$memoryLimit < (int)$requiredMemory * 1024 * 1024)
+    ) {
+        ini_set('memory_limit', $requiredMemory);
     }
 
     define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::logDir() . 'c3tmp');
