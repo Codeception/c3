@@ -164,7 +164,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 
     /**
      * @param $filename
-     * @return null|PHP_CodeCoverage
+     * @return null|PHP_CodeCoverage|\SebastianBergmann\CodeCoverage\CodeCoverage
      */
     function __c3_factory($filename)
     {
@@ -220,18 +220,31 @@ $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codec
 
 $requested_c3_report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
 
-$complete_report = $current_report = $path . '.serialized';
+$current_report = $path . '-' . uniqid(microtime(true), true) . '.serialized';
 if ($requested_c3_report) {
     set_time_limit(0);
 
     $route = ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/');
 
-    if ($route == 'clear') {
+    if ($route === 'clear') {
         __c3_clear();
         return __c3_exit();
     }
 
-    $codeCoverage = __c3_factory($complete_report);
+    if (!file_exists(dirname($path))) {
+        __c3_error("Can't read CodeCoverage reports from ".dirname($path));
+    }
+
+    foreach (scandir(dirname($path)) as $item) {
+        if (strpos($item, 'codecoverage-') === 0) {
+            $filename = dirname($path) . DIRECTORY_SEPARATOR . $item;
+            if (!isset($codeCoverage)) {
+                $codeCoverage = __c3_factory($filename);
+            } else {
+                $codeCoverage->merge(unserialize(file_get_contents($filename)));
+            }
+        }
+    }
 
     switch ($route) {
         case 'html':
@@ -250,6 +263,8 @@ if ($requested_c3_report) {
             return __c3_exit();
         case 'serialized':
             try {
+                $complete_report = $path . '.serialized';
+                file_put_contents($complete_report, serialize($codeCoverage));
                 __c3_send_file($complete_report);
             } catch (Exception $e) {
                 __c3_error($e->getMessage());
