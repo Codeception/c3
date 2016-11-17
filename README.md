@@ -48,7 +48,7 @@ define('C3_CODECOVERAGE_ERROR_LOG_FILE', '/path/to/c3_error.log'); //Optional (i
 include '/../c3.php';
 
 define('MY_APP_STARTED', true);
-App::start();
+// App::start();
 ?>
 ```
 
