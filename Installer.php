@@ -6,6 +6,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Installer\PackageEvent;
 
 class Installer implements PluginInterface, EventSubscriberInterface
 {
@@ -18,7 +19,14 @@ class Installer implements PluginInterface, EventSubscriberInterface
     {
         $this->io = $io;
     }
-
+    
+    protected function isOperationOnC3(PackageEvent $event)
+    {
+        list(, $name) = explode('/', $event->getOperation()->getPackage()->getName());
+        
+        return $name === 'c3';
+    }
+    
     public static function getSubscribedEvents()
     {
         return [
@@ -40,8 +48,11 @@ class Installer implements PluginInterface, EventSubscriberInterface
         $event->getIO()->write("<warning>Please remove current \"post-install-cmd\" and \"post-update-cmd\" hooks from your composer.json</warning>");
     }
 
-    public function copyC3()
+    public function copyC3(PackageEvent $event)
     {
+        if (!$this->isOperationOnC3($event)) {
+            return;
+        }
         if ($this->c3NotChanged()) {
             $this->io->write("<comment>[codeception/c3]</comment> c3.php is already up-to-date");
             return;
@@ -52,9 +63,9 @@ class Installer implements PluginInterface, EventSubscriberInterface
         $this->io->write("<comment>[codeception/c3]</comment> Include c3.php into index.php in order to collect codecoverage from server scripts");
     }
 
-    public function askForUpdate()
+    public function askForUpdate(PackageEvent $event)
     {
-        if ($this->c3NotChanged()) {
+        if (!$this->isOperationOnC3($event) || $this->c3NotChanged()) {
             return;
         }
         if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
@@ -72,12 +83,14 @@ class Installer implements PluginInterface, EventSubscriberInterface
             md5_file(__DIR__ . DIRECTORY_SEPARATOR . 'c3.php') === md5_file(getcwd() . DIRECTORY_SEPARATOR . 'c3.php');
     }
 
-    public function deleteC3()
+    public function deleteC3(PackageEvent $event)
     {
+        if (!$this->isOperationOnC3($event)) {
+            return;
+        }
         if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
             $this->io->write("<comment>[codeception/c3]</comment> Deleting c3.php from the root of your project...");
             unlink(getcwd() . DIRECTORY_SEPARATOR . 'c3.php');
         }
     }
 }
-
