@@ -1,12 +1,15 @@
 <?php
 namespace Codeception\c3;
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\UninstallOperation;
+use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
-use Composer\Installer\PackageEvent;
 
 class Installer implements PluginInterface, EventSubscriberInterface
 {
@@ -22,8 +25,16 @@ class Installer implements PluginInterface, EventSubscriberInterface
     
     protected function isOperationOnC3(PackageEvent $event)
     {
-        list(, $name) = explode('/', $event->getOperation()->getPackage()->getName());
-        
+        $name = '';
+
+        if ($event->getOperation() instanceof InstallOperation) {
+            list(, $name) = explode('/', $event->getOperation()->getPackage()->getName());
+        } elseif ($event->getOperation() instanceof UpdateOperation) {
+            list(, $name) = explode('/', $event->getOperation()->getTargetPackage()->getName());
+        } elseif ($event->getOperation() instanceof UninstallOperation) {
+            list(, $name) = explode('/', $event->getOperation()->getPackage()->getName());
+        }
+
         return $name === 'c3';
     }
     
