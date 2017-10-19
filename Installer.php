@@ -85,7 +85,7 @@ class Installer implements PluginInterface, EventSubscriberInterface
                 return;
             }
         }
-        $this->copyC3();
+        $this->copyC3($event);
     }
 
     private function c3NotChanged()
