@@ -165,7 +165,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 
     function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path)
     {
-        $writer = new PHP_CodeCoverage_Report_PHPUnit();
+        $writer = new PHP_CodeCoverage_Report_PHPUnit(\PHPUnit_Runner_Version::id());
         $writer->process($codeCoverage, $path . 'phpunit');
 
         if (file_exists($path . '.tar')) {
