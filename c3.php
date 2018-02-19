@@ -60,7 +60,7 @@ if (!class_exists('PHP_CodeCoverage') and class_exists('SebastianBergmann\CodeCo
     class_alias('SebastianBergmann\CodeCoverage\Exception', 'PHP_CodeCoverage_Exception');
 }
 // phpunit version
-if (!class_exists('PHPUnit_Runner_Version' && class_exists('PHPUnit\Runner\Version')) {
+if (!class_exists('PHPUnit_Runner_Version') && class_exists('PHPUnit\Runner\Version')) {
     class_alias('PHPUnit\Runner\Version', 'PHPUnit_Runner_Version');
 }    
 
