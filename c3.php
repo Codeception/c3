@@ -48,22 +48,6 @@ if (!function_exists('__c3_error')) {
     }
 }
 
-// phpunit codecoverage shimming
-if (!class_exists('PHP_CodeCoverage') and class_exists('SebastianBergmann\CodeCoverage\CodeCoverage')) {
-    class_alias('SebastianBergmann\CodeCoverage\CodeCoverage', 'PHP_CodeCoverage');
-    class_alias('SebastianBergmann\CodeCoverage\Report\Text', 'PHP_CodeCoverage_Report_Text');
-    class_alias('SebastianBergmann\CodeCoverage\Report\PHP', 'PHP_CodeCoverage_Report_PHP');
-    class_alias('SebastianBergmann\CodeCoverage\Report\Clover', 'PHP_CodeCoverage_Report_Clover');
-    class_alias('SebastianBergmann\CodeCoverage\Report\Crap4j', 'PHP_CodeCoverage_Report_Crap4j');
-    class_alias('SebastianBergmann\CodeCoverage\Report\Html\Facade', 'PHP_CodeCoverage_Report_HTML');
-    class_alias('SebastianBergmann\CodeCoverage\Report\Xml\Facade', 'PHP_CodeCoverage_Report_XML');
-    class_alias('SebastianBergmann\CodeCoverage\Exception', 'PHP_CodeCoverage_Exception');
-}
-// phpunit version
-if (!class_exists('PHPUnit_Runner_Version') && class_exists('PHPUnit\Runner\Version')) {
-    class_alias('PHPUnit\Runner\Version', 'PHPUnit_Runner_Version');
-}    
-
 // Autoload Codeception classes
 if (!class_exists('\\Codeception\\Codecept')) {
     if (file_exists(__DIR__ . '/codecept.phar')) {
@@ -80,6 +64,22 @@ if (!class_exists('\\Codeception\\Codecept')) {
         __c3_error('Codeception is not loaded. Please check that either PHAR or Composer package can be used');
     }
 }
+
+// phpunit codecoverage shimming
+if (!class_exists('PHP_CodeCoverage') and class_exists('SebastianBergmann\CodeCoverage\CodeCoverage')) {
+    class_alias('SebastianBergmann\CodeCoverage\CodeCoverage', 'PHP_CodeCoverage');
+    class_alias('SebastianBergmann\CodeCoverage\Report\Text', 'PHP_CodeCoverage_Report_Text');
+    class_alias('SebastianBergmann\CodeCoverage\Report\PHP', 'PHP_CodeCoverage_Report_PHP');
+    class_alias('SebastianBergmann\CodeCoverage\Report\Clover', 'PHP_CodeCoverage_Report_Clover');
+    class_alias('SebastianBergmann\CodeCoverage\Report\Crap4j', 'PHP_CodeCoverage_Report_Crap4j');
+    class_alias('SebastianBergmann\CodeCoverage\Report\Html\Facade', 'PHP_CodeCoverage_Report_HTML');
+    class_alias('SebastianBergmann\CodeCoverage\Report\Xml\Facade', 'PHP_CodeCoverage_Report_XML');
+    class_alias('SebastianBergmann\CodeCoverage\Exception', 'PHP_CodeCoverage_Exception');
+}
+// phpunit version
+if (!class_exists('PHPUnit_Runner_Version') && class_exists('PHPUnit\Runner\Version')) {
+    class_alias('PHPUnit\Runner\Version', 'PHPUnit_Runner_Version');
+}  
 
 // Load Codeception Config
 $config_dist_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
