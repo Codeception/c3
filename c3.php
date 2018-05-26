@@ -283,7 +283,7 @@ $complete_report = $current_report = $path . '.serialized';
 if ($requested_c3_report) {
     set_time_limit(0);
 
-    $route = ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/');
+    $route = ltrim(strrchr(rtrim($_SERVER['REQUEST_URI'], '/'), '/'), '/');
 
     if ($route === 'clear') {
         __c3_clear();
