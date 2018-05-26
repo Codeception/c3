@@ -1,6 +1,6 @@
 **[Issues](https://github.com/Codeception/Codeception/issues)** | **[Usage Guide](http://codeception.com/docs/11-Codecoverage)**
 
-## Remote CodeCoverage for Codeception
+## Remote CodeCoverage for Codeception [![Build Status](https://travis-ci.org/Codeception/c3.svg?branch=2.0)](https://travis-ci.org/Codeception/c3)
 
 This file `c3.php` should be included into the application you are testing in the very first line.
 It will start remote code coverage collection. Coverage data will be stored to disk and retrieved by `codeception` when tests from the suite are finished.
