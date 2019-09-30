@@ -106,4 +106,4 @@ now access `http://yourhost/c3/report/clear` url and see if it has errors. Pleas
 
 In root of your project `c3tmp` dir will be created during code coverage. 
 It will not be deleted after suite ends for testing and debugging purposes.
-Serialized data as well as xml and html code coverage reports will be stores there.
+Serialized data as well as xml and html code coverage reports will be stored there.
