@@ -22,7 +22,7 @@ Add to `composer.json`:
 
 ```
 "require-dev": {
-    "codeception/codeception": "2.*",
+    "codeception/codeception": "3.*",
     "codeception/c3": "2.*"
 }
 ```
