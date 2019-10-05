@@ -226,7 +226,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             } else {
                 $phpCoverage = unserialize(file_get_contents($filename));
             }
-            
+
             return array($phpCoverage, $file);
         } else {
             $phpCoverage = new PHP_CodeCoverage();
