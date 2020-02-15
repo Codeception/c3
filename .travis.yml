@@ -1,7 +1,8 @@
 language: php
 
 env:
-  CODECEPTION_VERSION: '^2.4'
+  - DEPS: 'codeception/codeception:^3.0'
+  - DEPS: 'codeception/codeception:^4.0 codeception/module-filesystem'
 
 php:
   - 5.6
@@ -12,7 +13,7 @@ php:
   - 7.4
 
 before_script:
-  - composer require codeception/codeception --dev --prefer-source
+  - composer require $DEPS --dev --prefer-source
   - cp c3.php vendor/codeception/codeception/tests/data/claypit
   - cd vendor/codeception/codeception
   - php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
