@@ -1,16 +1,20 @@
 language: php
 
 env:
-  CODECEPTION_VERSION: '^2.4'
+  - CODECEPTION_VERSION: '^3.0'
+  - CODECEPTION_VERSION: '^4.0'
 
 php:
   - 5.6
   - 7.0
   - 7.1
   - 7.2
+  - 7.3
+  - 7.4
 
 before_script:
-  - composer require codeception/codeception --dev --prefer-source
+  - composer require codeception/codeception:"$CODECEPTION_VERSION" --dev --prefer-source
+  - if [ "^3.0" != "$CODECEPTION_VERSION" ]; then composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev; fi;
   - cp c3.php vendor/codeception/codeception/tests/data/claypit
   - cd vendor/codeception/codeception
   - php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
