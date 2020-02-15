@@ -13,6 +13,7 @@ php:
   - 7.4
 
 before_script:
+  - export COMPOSER_MEMORY_LIMIT=-1
   - composer require codeception/codeception:"$CODECEPTION_VERSION" --dev --prefer-source
   - if [ "^3.0" != "$CODECEPTION_VERSION" ]; then composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev; fi;
   - cp c3.php vendor/codeception/codeception/tests/data/claypit
