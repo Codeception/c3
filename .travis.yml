@@ -14,7 +14,7 @@ php:
 
 before_script:
   - composer require codeception/codeception:"$CODECEPTION_VERSION" --dev --prefer-source
-  - if [ "^3.0" != "$CODECEPTION_VERSION" ]; then composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts --dev; fi;
+  - if [ "^3.0" != "$CODECEPTION_VERSION" ]; then composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev; fi;
   - cp c3.php vendor/codeception/codeception/tests/data/claypit
   - cd vendor/codeception/codeception
   - php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
