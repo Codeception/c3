@@ -170,6 +170,17 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return $path . '.crap4j.xml';
     }
 
+    function __c3_build_cobertura_report(PHP_CodeCoverage $codeCoverage, $path)
+    {
+        if (!class_exists(\SebastianBergmann\CodeCoverage\Report\Cobertura::class)) {
+            throw new Exception("Cobertura report requires php-code-coverage >= 9.2");
+        }
+        $writer = new \SebastianBergmann\CodeCoverage\Report\Cobertura();
+        $writer->process($codeCoverage, $path . '.cobertura.xml');
+
+        return $path . '.cobertura.xml';
+    }
+
     function __c3_build_phpunit_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         $writer = new PHP_CodeCoverage_Report_XML(\PHPUnit_Runner_Version::id());
@@ -335,6 +346,13 @@ if ($requestedC3Report) {
         case 'phpunit':
             try {
                 __c3_send_file(__c3_build_phpunit_report($codeCoverage, $path));
+            } catch (Exception $e) {
+                __c3_error($e->getMessage());
+            }
+            return __c3_exit();
+        case 'cobertura':
+            try {
+                __c3_send_file(__c3_build_cobertura_report($codeCoverage, $path));
             } catch (Exception $e) {
                 __c3_error($e->getMessage());
             }
