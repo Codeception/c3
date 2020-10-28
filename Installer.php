@@ -6,6 +6,7 @@ use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
@@ -63,13 +64,13 @@ class Installer implements PluginInterface, EventSubscriberInterface
             ];
         }
         return [
-            ScriptEvents::POST_PACKAGE_INSTALL => [
+            PackageEvents::POST_PACKAGE_INSTALL => [
                 ['copyC3', 0]
             ],
-            ScriptEvents::POST_PACKAGE_UPDATE => [
+            PackageEvents::POST_PACKAGE_UPDATE => [
                 ['askForUpdate', 0]
             ],
-            ScriptEvents::POST_PACKAGE_UNINSTALL => [
+            PackageEvents::POST_PACKAGE_UNINSTALL => [
                 ['deleteC3', 0]
             ]
         ];
