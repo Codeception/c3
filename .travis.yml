@@ -16,17 +16,17 @@ php:
 jobs:
   exclude:
     - php: 5.6
-      env: CODECEPTION_VERSION='^3.0' COMPOSER=1
+      env: CODECEPTION_VERSION='^3.0' COMPOSER=2
     - php: 5.6
-      env: CODECEPTION_VERSION='^4.0' COMPOSER=1
+      env: CODECEPTION_VERSION='^4.0' COMPOSER=2
     - php: 7.0
-      env: CODECEPTION_VERSION='^3.0' COMPOSER=1
+      env: CODECEPTION_VERSION='^3.0' COMPOSER=2
     - php: 7.0
-      env: CODECEPTION_VERSION='^4.0' COMPOSER=1
+      env: CODECEPTION_VERSION='^4.0' COMPOSER=2
     - php: 7.1
-      env: CODECEPTION_VERSION='^3.0' COMPOSER=1
+      env: CODECEPTION_VERSION='^3.0' COMPOSER=2
     - php: 7.1
-      env: CODECEPTION_VERSION='^4.0' COMPOSER=1
+      env: CODECEPTION_VERSION='^4.0' COMPOSER=2
 
 before_script:
   - export COMPOSER_MEMORY_LIMIT=-1
