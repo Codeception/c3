@@ -10,6 +10,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Semver\Comparator;
 
 class Installer implements PluginInterface, EventSubscriberInterface
 {
@@ -22,9 +23,20 @@ class Installer implements PluginInterface, EventSubscriberInterface
     {
         $this->io = $io;
     }
-    
+
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io) {
+        $this->deleteFile();
+    }
+
     protected function isOperationOnC3(PackageEvent $event)
     {
+        if (static::composerV2()) {
+            return true;
+        }
         $name = '';
 
         if ($event->getOperation() instanceof InstallOperation) {
@@ -40,6 +52,16 @@ class Installer implements PluginInterface, EventSubscriberInterface
     
     public static function getSubscribedEvents()
     {
+        if (static::composerV2()) {
+            return [
+                ScriptEvents::POST_INSTALL_CMD => [
+                    ['copyC3V2', 0]
+                ],
+                ScriptEvents::POST_UPDATE_CMD => [
+                    ['askForUpdateV2', 0]
+                ],
+            ];
+        }
         return [
             ScriptEvents::POST_PACKAGE_INSTALL => [
                 ['copyC3', 0]
@@ -53,17 +75,17 @@ class Installer implements PluginInterface, EventSubscriberInterface
         ];
     }
 
-    public static function copyC3ToRoot(Event $event)
-    {
-        $event->getIO()->write("<warning>c3 is now a Composer Plugin and installs c3.php automatically.</warning>");
-        $event->getIO()->write("<warning>Please remove current \"post-install-cmd\" and \"post-update-cmd\" hooks from your composer.json</warning>");
-    }
-
     public function copyC3(PackageEvent $event)
     {
         if (!$this->isOperationOnC3($event)) {
             return;
         }
+
+        $this->copyC3V2(null);
+    }
+
+    public function copyC3V2(Event $event)
+    {
         if ($this->c3NotChanged()) {
             $this->io->write("<comment>[codeception/c3]</comment> c3.php is already up-to-date");
             return;
@@ -99,9 +121,19 @@ class Installer implements PluginInterface, EventSubscriberInterface
         if (!$this->isOperationOnC3($event)) {
             return;
         }
+        $this->deleteFile();
+    }
+
+    private function deleteFile() {
         if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
             $this->io->write("<comment>[codeception/c3]</comment> Deleting c3.php from the root of your project...");
             unlink(getcwd() . DIRECTORY_SEPARATOR . 'c3.php');
         }
     }
+
+    private static function composerV2()
+    {
+        return Comparator::greaterThanOrEqualTo(PluginInterface::PLUGIN_API_VERSION, '2.0.0');
+    }
+
 }
