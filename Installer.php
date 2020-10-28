@@ -91,6 +91,12 @@ class Installer implements PluginInterface, EventSubscriberInterface
             $this->io->write("<comment>[codeception/c3]</comment> c3.php is already up-to-date");
             return;
         }
+        if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
+            $replace = $this->io->askConfirmation("<warning>c3.php has changed</warning> Do you want to replace c3.php with latest version?", false);
+            if (!$replace) {
+                return;
+            }
+        }
 
         $this->io->write("<comment>[codeception/c3]</comment> Copying c3.php to the root of your project...");
         copy(__DIR__ . DIRECTORY_SEPARATOR . 'c3.php', getcwd() . DIRECTORY_SEPARATOR.'c3.php');
@@ -102,13 +108,15 @@ class Installer implements PluginInterface, EventSubscriberInterface
         if (!$this->isOperationOnC3($event) || $this->c3NotChanged()) {
             return;
         }
-        if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
-            $replace = $this->io->askConfirmation("<warning>c3.php has changed</warning> Do you want to replace c3.php with latest version?", false);
-            if (!$replace) {
-                return;
-            }
-        }
         $this->copyC3($event);
+    }
+
+    public function askForUpdateV2(Event $event)
+    {
+        if ($this->c3NotChanged()) {
+            return;
+        }
+        $this->copyC3V2($event);
     }
 
     private function c3NotChanged()
