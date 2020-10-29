@@ -6,10 +6,12 @@ use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Semver\Comparator;
 
 class Installer implements PluginInterface, EventSubscriberInterface
 {
@@ -22,9 +24,20 @@ class Installer implements PluginInterface, EventSubscriberInterface
     {
         $this->io = $io;
     }
-    
+
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io) {
+        $this->deleteFile();
+    }
+
     protected function isOperationOnC3(PackageEvent $event)
     {
+        if (static::composerV2()) {
+            return true;
+        }
         $name = '';
 
         if ($event->getOperation() instanceof InstallOperation) {
@@ -40,23 +53,27 @@ class Installer implements PluginInterface, EventSubscriberInterface
     
     public static function getSubscribedEvents()
     {
+        if (static::composerV2()) {
+            return [
+                ScriptEvents::POST_INSTALL_CMD => [
+                    ['copyC3V2', 0]
+                ],
+                ScriptEvents::POST_UPDATE_CMD => [
+                    ['askForUpdateV2', 0]
+                ],
+            ];
+        }
         return [
-            ScriptEvents::POST_PACKAGE_INSTALL => [
+            PackageEvents::POST_PACKAGE_INSTALL => [
                 ['copyC3', 0]
             ],
-            ScriptEvents::POST_PACKAGE_UPDATE => [
+            PackageEvents::POST_PACKAGE_UPDATE => [
                 ['askForUpdate', 0]
             ],
-            ScriptEvents::POST_PACKAGE_UNINSTALL => [
+            PackageEvents::POST_PACKAGE_UNINSTALL => [
                 ['deleteC3', 0]
             ]
         ];
-    }
-
-    public static function copyC3ToRoot(Event $event)
-    {
-        $event->getIO()->write("<warning>c3 is now a Composer Plugin and installs c3.php automatically.</warning>");
-        $event->getIO()->write("<warning>Please remove current \"post-install-cmd\" and \"post-update-cmd\" hooks from your composer.json</warning>");
     }
 
     public function copyC3(PackageEvent $event)
@@ -64,9 +81,21 @@ class Installer implements PluginInterface, EventSubscriberInterface
         if (!$this->isOperationOnC3($event)) {
             return;
         }
+
+        $this->copyC3V2(null);
+    }
+
+    public function copyC3V2(Event $event)
+    {
         if ($this->c3NotChanged()) {
             $this->io->write("<comment>[codeception/c3]</comment> c3.php is already up-to-date");
             return;
+        }
+        if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
+            $replace = $this->io->askConfirmation("<warning>c3.php has changed</warning> Do you want to replace c3.php with latest version?", false);
+            if (!$replace) {
+                return;
+            }
         }
 
         $this->io->write("<comment>[codeception/c3]</comment> Copying c3.php to the root of your project...");
@@ -79,13 +108,15 @@ class Installer implements PluginInterface, EventSubscriberInterface
         if (!$this->isOperationOnC3($event) || $this->c3NotChanged()) {
             return;
         }
-        if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
-            $replace = $this->io->askConfirmation("<warning>c3.php has changed</warning> Do you want to replace c3.php with latest version?", false);
-            if (!$replace) {
-                return;
-            }
-        }
         $this->copyC3($event);
+    }
+
+    public function askForUpdateV2(Event $event)
+    {
+        if ($this->c3NotChanged()) {
+            return;
+        }
+        $this->copyC3V2($event);
     }
 
     private function c3NotChanged()
@@ -99,9 +130,19 @@ class Installer implements PluginInterface, EventSubscriberInterface
         if (!$this->isOperationOnC3($event)) {
             return;
         }
+        $this->deleteFile();
+    }
+
+    private function deleteFile() {
         if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'c3.php')) {
             $this->io->write("<comment>[codeception/c3]</comment> Deleting c3.php from the root of your project...");
             unlink(getcwd() . DIRECTORY_SEPARATOR . 'c3.php');
         }
     }
+
+    private static function composerV2()
+    {
+        return Comparator::greaterThanOrEqualTo(PluginInterface::PLUGIN_API_VERSION, '2.0.0');
+    }
+
 }

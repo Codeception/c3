@@ -1,8 +1,9 @@
 language: php
 
 env:
-  - CODECEPTION_VERSION: '^3.0'
-  - CODECEPTION_VERSION: '^4.0'
+  - CODECEPTION_VERSION='^3.0' COMPOSER=1
+  - CODECEPTION_VERSION='^4.0' COMPOSER=1
+  - CODECEPTION_VERSION='^4.0' COMPOSER=2
 
 php:
   - 5.6
@@ -12,8 +13,18 @@ php:
   - 7.3
   - 7.4
 
+jobs:
+  exclude:
+    - php: 5.6
+      env: CODECEPTION_VERSION='^4.0' COMPOSER=2
+    - php: 7.0
+      env: CODECEPTION_VERSION='^4.0' COMPOSER=2
+    - php: 7.1
+      env: CODECEPTION_VERSION='^4.0' COMPOSER=2
+
 before_script:
   - export COMPOSER_MEMORY_LIMIT=-1
+  - composer self-update --${COMPOSER}
   - composer require codeception/codeception:"$CODECEPTION_VERSION" --dev --prefer-source
   - if [ "^3.0" != "$CODECEPTION_VERSION" ]; then composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev; fi;
   - cp c3.php vendor/codeception/codeception/tests/data/claypit
