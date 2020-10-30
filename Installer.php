@@ -9,7 +9,7 @@ use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
-use Composer\Script\Event;
+use Composer\EventDispatcher\Event;
 use Composer\Script\ScriptEvents;
 use Composer\Semver\Comparator;
 
@@ -82,7 +82,7 @@ class Installer implements PluginInterface, EventSubscriberInterface
             return;
         }
 
-        $this->copyC3V2(null);
+        $this->copyC3V2($event);
     }
 
     public function copyC3V2(Event $event)
