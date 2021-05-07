@@ -52,7 +52,7 @@ if (!function_exists('__c3_error')) {
 }
 
 // Autoload Codeception classes
-if (!class_exists('\\Codeception\\Codecept')) {
+if (!class_exists('\\Codeception\\Codecept') || !function_exists('codecept_is_path_absolute')) {
     if (file_exists(__DIR__ . '/codecept.phar')) {
         require_once 'phar://' . __DIR__ . '/codecept.phar/autoload.php';
     } elseif (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
