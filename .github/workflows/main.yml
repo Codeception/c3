@@ -35,7 +35,7 @@ jobs:
 
     - name: Start PHP Server
       run: |
-        cd vendor/codeception/codeception && php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
+        cd vendor/codeception/codeception && php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
          
     - name: Run test suite
       run: cd vendor/codeception/codeception && php ./codecept run coverage
@@ -70,7 +70,7 @@ jobs:
 
     - name: Start PHP Server
       run: |
-        cd vendor/codeception/codeception && php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
+        cd vendor/codeception/codeception && php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
          
     - name: Run test suite
       run: cd vendor/codeception/codeception && php ./codecept run coverage
@@ -105,7 +105,7 @@ jobs:
 
     - name: Start PHP Server
       run: |
-        cd vendor/codeception/codeception && php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
+        cd vendor/codeception/codeception && php -S 127.0.0.1:8000 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
          
     - name: Run test suite
       run: cd vendor/codeception/codeception && php ./codecept run coverage
