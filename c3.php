@@ -24,7 +24,9 @@ if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
 
     if ($cookie) {
         foreach ($cookie as $key => $value) {
-            $_SERVER["HTTP_X_CODECEPTION_" . strtoupper($key)] = $value;
+            if (!empty($value)) {
+                $_SERVER["HTTP_X_CODECEPTION_" . strtoupper($key)] = $value;
+            }
         }
     }
 }
