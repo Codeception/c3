@@ -38,18 +38,27 @@ if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
 if (!function_exists('__c3_error')) {
     function __c3_error($message)
     {
-        $errorLogFile = defined('C3_CODECOVERAGE_ERROR_LOG_FILE') ?
-            C3_CODECOVERAGE_ERROR_LOG_FILE :
-            C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt';
-        if (is_writable($errorLogFile)) {
-            file_put_contents($errorLogFile, $message);
+        if (defined('C3_CODECOVERAGE_ERROR_LOG_FILE')) {
+            $errorLogFile = C3_CODECOVERAGE_ERROR_LOG_FILE;
+        } elseif (defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
+            $errorLogFile = C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt';
         } else {
-            $message = "Could not write error to log file ($errorLogFile), original message: $message";
+            $errorLogFile = null;
         }
+
+        if (isset($errorLogFile)) {
+            if (@file_put_contents($errorLogFile, $message) === false) {
+                $message = "Could not write error to log file ($errorLogFile), original message: $message";
+            }
+        }
+
         if (!headers_sent()) {
             header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
         }
         setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
+
+        echo 'CodeCeption C3 Error: ' . $message;
+        exit(1);
     }
 }
 
