@@ -45,11 +45,13 @@ if (!function_exists('__c3_error')) {
         } else {
             $errorLogFile = null;
         }
-        if (is_writable($errorLogFile)) {
-            file_put_contents($errorLogFile, $message);
-        } else {
-            $message = "Could not write error to log file ($errorLogFile), original message: $message";
+
+        if (isset($errorLogFile)) {
+            if (@file_put_contents($errorLogFile, $message) === false) {
+                $message = "Could not write error to log file ($errorLogFile), original message: $message";
+            }
         }
+
         if (!headers_sent()) {
             header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
         }
