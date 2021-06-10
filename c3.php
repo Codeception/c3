@@ -58,7 +58,11 @@ if (!class_exists('\\Codeception\\Codecept') || !function_exists('codecept_is_pa
     if (file_exists(__DIR__ . '/codecept.phar')) {
         require_once 'phar://' . __DIR__ . '/codecept.phar/autoload.php';
     } elseif (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
-        require_once __DIR__ . '/vendor/autoload.php';
+        if (stream_resolve_include_path(__DIR__ . '/vendor/autoload_runtime.php')) {
+            require_once __DIR__ . '/vendor/autoload_runtime.php';
+        } else {
+            require_once __DIR__ . '/vendor/autoload.php';
+        }
         // Required to load some methods only available at codeception/autoload.php
         if (stream_resolve_include_path(__DIR__ . '/vendor/codeception/codeception/autoload.php')) {
             require_once __DIR__ . '/vendor/codeception/codeception/autoload.php';
