@@ -10,6 +10,7 @@
 
 // $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
 
+use PHPUnit\Runner\CodeCoverage as CodeCoverageRunner;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
@@ -243,17 +244,36 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
                 $phpCoverage = unserialize(file_get_contents($filename));
             }
 
-            return array($phpCoverage, $file);
-        } else {
-            if (method_exists(Driver::class, 'forLineCoverage')) {
-                //php-code-coverage 9+
+            return array(
+                $phpCoverage,
+                $file
+            );
+        }
+
+        $pathCoverage = false;
+        if (isset($coverageConfiguration['path_coverage'])) {
+            $pathCoverage = (bool)$coverageConfiguration['path_coverage'];
+        }
+
+        if (class_exists(CodeCoverageRunner::class)) {
+            //PHPUnit 10+
+            if (!CodeCoverageRunner::isActive()) {
                 $filter = new CodeCoverageFilter();
-                $driver = Driver::forLineCoverage($filter);
-                $phpCoverage = new PHP_CodeCoverage($driver, $filter);
-            } else {
-                //php-code-coverage 8 or older
-                $phpCoverage = new PHP_CodeCoverage();
+                CodeCoverageRunner::activate($filter, $pathCoverage);
             }
+            $phpCoverage = CodeCoverageRunner::instance();
+        } elseif (method_exists(Driver::class, 'forLineCoverage')) {
+            //php-code-coverage 9
+            $filter = new CodeCoverageFilter();
+            if ($pathCoverage) {
+                $driver = Driver::forLineAndPathCoverage($filter);
+            } else {
+                $driver = Driver::forLineCoverage($filter);
+            }
+            $phpCoverage = new PHP_CodeCoverage($driver, $filter);
+        } else {
+            //php-code-coverage 8 or older
+            $phpCoverage = new PHP_CodeCoverage();
         }
 
         if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'])) {
