@@ -1,4 +1,4 @@
-**[Issues](https://github.com/Codeception/Codeception/issues)** | **[Usage Guide](http://codeception.com/docs/11-Codecoverage)**
+**[Issues](https://github.com/Codeception/Codeception/issues)** | **[Usage Guide](http://codeception.com/docs/11-Codecoverage)** | [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 
 ## Remote CodeCoverage for Codeception [![Build Status](https://travis-ci.org/Codeception/c3.svg?branch=2.0)](https://travis-ci.org/Codeception/c3)
 
