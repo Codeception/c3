@@ -64,8 +64,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require codeception/codeception:"^4.1" --dev --prefer-source
-        composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev
+        composer require codeception/codeception:"4.1.x-dev" --dev --prefer-source
+        composer require codeception/module-filesystem:"^1.0" codeception/module-cli:"^1.0" codeception/module-asserts:"^1.0|^2.0" codeception/module-phpbrowser:"^1.0" --dev
         cp c3.php vendor/codeception/codeception/tests/data/claypit
 
     - name: Start PHP Server
@@ -99,8 +99,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require codeception/codeception:"^4.1" --dev --prefer-source
-        composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev
+        composer require codeception/codeception:"4.1.x-dev" --dev --prefer-source
+        composer require codeception/module-filesystem:"^1.0" codeception/module-cli:"^1.0" codeception/module-asserts:"^1.0|^2.0" codeception/module-phpbrowser:"^1.0" --dev
         cp c3.php vendor/codeception/codeception/tests/data/claypit
 
     - name: Start PHP Server
