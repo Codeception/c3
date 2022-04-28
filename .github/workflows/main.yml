@@ -45,7 +45,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0]
+        php: [5.6, 7.0, 7.1, 7.2, 7.3, 7.4, 8.0, 8.1]
 
     steps:
     - name: Checkout code
@@ -64,8 +64,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require codeception/codeception:"^4.1" --dev --prefer-source
-        composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev
+        composer require codeception/codeception:"4.1.x-dev" --dev --prefer-source
+        composer require codeception/module-filesystem:"^1.0" codeception/module-cli:"^1.0" codeception/module-asserts:"^1.0|^2.0" codeception/module-phpbrowser:"^1.0" --dev
         cp c3.php vendor/codeception/codeception/tests/data/claypit
 
     - name: Start PHP Server
@@ -80,7 +80,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [7.2, 7.3, 7.4, 8.0]
+        php: [7.2, 7.3, 7.4, 8.0, 8.1]
 
     steps:
     - name: Checkout code
@@ -99,8 +99,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require codeception/codeception:"^4.1" --dev --prefer-source
-        composer require codeception/module-filesystem codeception/module-cli codeception/module-asserts codeception/module-phpbrowser --dev
+        composer require codeception/codeception:"4.1.x-dev" --dev --prefer-source
+        composer require codeception/module-filesystem:"^1.0" codeception/module-cli:"^1.0" codeception/module-asserts:"^1.0|^2.0" codeception/module-phpbrowser:"^1.0" --dev
         cp c3.php vendor/codeception/codeception/tests/data/claypit
 
     - name: Start PHP Server
@@ -109,3 +109,38 @@ jobs:
          
     - name: Run test suite
       run: cd vendor/codeception/codeception && php ./codecept run coverage
+
+  codeception5:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [8.0, 8.1]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Use Composer v2
+        run: composer self-update --2
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Install dependencies
+        run: |
+          composer require codeception/codeception:"5.0.x-dev as 5.0.0" --dev --prefer-source
+          composer require codeception/module-filesystem:"^3.0" codeception/module-cli:"^2.0" codeception/module-asserts:"^3.0" codeception/module-phpbrowser:"^3.0" --dev
+          cp c3.php vendor/codeception/codeception/tests/data/claypit
+
+      - name: Start PHP Server
+        run: |
+          cd vendor/codeception/codeception && php -S 127.0.0.1:8008 -t tests/data/app -d pcov.directory=$(pwd)/tests/data/app >/dev/null 2>&1 &
+
+      - name: Run test suite
+        run: cd vendor/codeception/codeception && php ./codecept run coverage
