@@ -262,6 +262,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
                 $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
             } catch (Exception $e) {
                 __c3_error($e->getMessage());
+                $settings = array();
             }
         } else {
             $settings = \Codeception\Configuration::config();
