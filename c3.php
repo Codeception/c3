@@ -243,17 +243,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
                 $phpCoverage = unserialize(file_get_contents($filename));
             }
 
-            return array($phpCoverage, $file);
-        } else {
-            if (method_exists(Driver::class, 'forLineCoverage')) {
-                //php-code-coverage 9+
-                $filter = new CodeCoverageFilter();
-                $driver = Driver::forLineCoverage($filter);
-                $phpCoverage = new PHP_CodeCoverage($driver, $filter);
-            } else {
-                //php-code-coverage 8 or older
-                $phpCoverage = new PHP_CodeCoverage();
-            }
+            return [$phpCoverage, $file];
         }
 
         if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_SUITE'])) {
@@ -262,10 +252,29 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
                 $settings = \Codeception\Configuration::suiteSettings($suite, \Codeception\Configuration::config());
             } catch (Exception $e) {
                 __c3_error($e->getMessage());
-                $settings = array();
+                $settings = [];
             }
         } else {
             $settings = \Codeception\Configuration::config();
+        }
+
+        $pathCoverage = false;
+        if (isset($settings['coverage']['path_coverage'])) {
+            $pathCoverage = (bool)$settings['coverage']['path_coverage'];
+        }
+
+        if (method_exists(Driver::class, 'forLineCoverage')) {
+            //php-code-coverage 9+
+            $filter = new CodeCoverageFilter();
+            if ($pathCoverage) {
+                $driver = Driver::forLineAndPathCoverage($filter);
+            } else {
+                $driver = Driver::forLineCoverage($filter);
+            }
+            $phpCoverage = new PHP_CodeCoverage($driver, $filter);
+        } else {
+            //php-code-coverage 8 or older
+            $phpCoverage = new PHP_CodeCoverage();
         }
 
         try {
@@ -276,7 +285,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             __c3_error($e->getMessage());
         }
 
-        return array($phpCoverage, $file);
+        return [$phpCoverage, $file];
     }
 
     function __c3_exit()
