@@ -10,6 +10,8 @@
 
 // $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
 
+use Codeception\Util\ReflectionHelper;
+use PHPUnit\Runner\CodeCoverage as CodeCoverageRunner;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
@@ -263,8 +265,22 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             $pathCoverage = (bool)$settings['coverage']['path_coverage'];
         }
 
-        if (method_exists(Driver::class, 'forLineCoverage')) {
-            //php-code-coverage 9+
+        if (class_exists(CodeCoverageRunner::class)) {
+            //PHPUnit 10+
+            if (!CodeCoverageRunner::isActive()) {
+                ReflectionHelper::invokePrivateMethod(
+                    null,
+                    'activate',
+                    [
+                        new CodeCoverageFilter(),
+                        $pathCoverage
+                    ],
+                    CodeCoverageRunner::class
+                );
+            }
+            $phpCoverage = CodeCoverageRunner::instance();
+        } elseif (method_exists(Driver::class, 'forLineCoverage')) {
+            //php-code-coverage 9
             $filter = new CodeCoverageFilter();
             if ($pathCoverage) {
                 $driver = Driver::forLineAndPathCoverage($filter);
