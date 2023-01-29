@@ -64,7 +64,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require codeception/codeception:"4.1.x-dev" --dev --prefer-source
+        composer require codeception/codeception:"^4.2" --dev --prefer-source
         composer require codeception/module-filesystem:"^1.0" codeception/module-cli:"^1.0" codeception/module-asserts:"^1.0|^2.0" codeception/module-phpbrowser:"^1.0" --dev
         cp c3.php vendor/codeception/codeception/tests/data/claypit
 
@@ -99,7 +99,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer require codeception/codeception:"4.1.x-dev" --dev --prefer-source
+        composer require codeception/codeception:"^4.1" --dev --prefer-source
         composer require codeception/module-filesystem:"^1.0" codeception/module-cli:"^1.0" codeception/module-asserts:"^1.0|^2.0" codeception/module-phpbrowser:"^1.0" --dev
         cp c3.php vendor/codeception/codeception/tests/data/claypit
 
@@ -134,7 +134,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require codeception/codeception:"5.0.x-dev as 5.0.0" --dev --prefer-source
+          composer require codeception/codeception:"^5.0" --dev --prefer-source
           composer require codeception/module-filesystem:"^3.0" codeception/module-cli:"^2.0" codeception/module-asserts:"^3.0" codeception/module-phpbrowser:"^3.0" --dev
           cp c3.php vendor/codeception/codeception/tests/data/claypit
 
