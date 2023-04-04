@@ -2,18 +2,18 @@
 
 ## Remote CodeCoverage for Codeception [![Build Status](https://travis-ci.org/Codeception/c3.svg?branch=2.0)](https://travis-ci.org/Codeception/c3)
 
-This file `c3.php` should be included into the application you are testing in the very first line.
+C3 should be included and run into the application you are testing in the very first line.
 It will start remote code coverage collection. Coverage data will be stored to disk and retrieved by `codeception` when tests from the suite are finished.
 This file won't affect your application in any way. It is executed **only** when a special header `X-Codeception-CodeCoverage` is sent. Alternatively, if you use Selenium, special cookie `CODECEPTION_CODECOVERAGE` is used. In any other case your application run as usually with no overheads.
 
 ### Local Code Coverage
 
-If you don't run tests on remote server but use a webserver (Apache, Nginx, PhpWebserver) you need `c3.php` installed just the same way.
+If you don't run tests on remote server but use a webserver (Apache, Nginx, PhpWebserver) you need C3 included just the same way.
 In this case coverage result will be merged with local code coverage.
 
 ### Installation
 
-File `c3.php` should be put in project root, into the same directory where `codeception.yml` config is located.
+`codeception/c3` should be available in your project as a dev dependency.
 Also, make sure Codeception is available on remote server either in phar/pear/composer packages.
 
 #### Via Composer
@@ -22,30 +22,24 @@ Add to `composer.json`:
 
 ```
 "require-dev": {
-    "codeception/codeception": "3.*",
-    "codeception/c3": "2.*"
+    "codeception/codeception": "5.*",
+    "codeception/c3": "3.*"
 }
-```
-
-C3 installer will copy `c3.php` to the project root.
-
-#### Manually
-
-```
-wget https://raw.github.com/Codeception/c3/2.0/c3.php
 ```
 
 ### Setup
 
-Now you should include c3.php in your front script, like `index.php`.
+Now you should run c3 in your front script, like `index.php`.
 
 Example file: `web/index.php`:
 
 ``` php
 <?php
 
-define('C3_CODECOVERAGE_ERROR_LOG_FILE', '/path/to/c3_error.log'); //Optional (if not set the default c3 output dir will be used)
-include '/../c3.php';
+require __DIR__ . '/vendor/autoload.php';
+
+$c3 = new Codeception\C3(__DIR__); // pass the directory where `codeception.yml` config is located.
+$c3->run();
 
 define('MY_APP_STARTED', true);
 // App::start();
