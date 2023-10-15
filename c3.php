@@ -266,7 +266,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
                 $blockfilename = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'block_report';
                 if (file_exists($blockfilename) && filesize($blockfilename) !== 0) {
                     while(file_get_contents($blockfilename) !== '0') {
-                        usleep(250_000); // 0.25 sec
+                        usleep(250000); // 0.25 sec
                     }
                 }
                 $phpCoverage = unserialize(file_get_contents($filename));
