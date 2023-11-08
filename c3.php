@@ -265,7 +265,8 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
                 // wait until serialized coverage data of all tests is written to file
                 $blockfilename = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'block_report';
                 if (file_exists($blockfilename) && filesize($blockfilename) !== 0) {
-                    while(file_get_contents($blockfilename) !== '0') {
+                    $retries = 10;
+                    while (file_get_contents($blockfilename) !== '0' && --$retries >= 0) {
                         usleep(250000); // 0.25 sec
                     }
                 }
