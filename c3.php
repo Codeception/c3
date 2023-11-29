@@ -27,7 +27,7 @@ if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     if ($cookie) {
         foreach ($cookie as $key => $value) {
             if (!empty($value)) {
-                $_SERVER["HTTP_X_CODECEPTION_" . strtoupper($key)] = $value;
+                $_SERVER['HTTP_X_CODECEPTION_' . strtoupper($key)] = $value;
             }
         }
     }
@@ -175,7 +175,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     function __c3_build_cobertura_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         if (!class_exists(\SebastianBergmann\CodeCoverage\Report\Cobertura::class)) {
-            throw new Exception("Cobertura report requires php-code-coverage >= 9.2");
+            throw new Exception('Cobertura report requires php-code-coverage >= 9.2');
         }
         $writer = new \SebastianBergmann\CodeCoverage\Report\Cobertura();
         $writer->process($codeCoverage, $path . '.cobertura.xml');
