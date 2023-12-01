@@ -27,7 +27,7 @@ if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     if ($cookie) {
         foreach ($cookie as $key => $value) {
             if (!empty($value)) {
-                $_SERVER["HTTP_X_CODECEPTION_" . strtoupper($key)] = $value;
+                $_SERVER['HTTP_X_CODECEPTION_' . strtoupper($key)] = $value;
             }
         }
     }
@@ -43,9 +43,7 @@ if (!function_exists('__c3_error')) {
         $errorLogFile = defined('C3_CODECOVERAGE_ERROR_LOG_FILE') ?
             C3_CODECOVERAGE_ERROR_LOG_FILE :
             C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt';
-        if (is_writable($errorLogFile)) {
-            file_put_contents($errorLogFile, $message);
-        } else {
+        if (file_put_contents($errorLogFile, $message, FILE_APPEND | LOCK_EX) === false) {
             $message = "Could not write error to log file ($errorLogFile), original message: $message";
         }
         if (!headers_sent()) {
@@ -177,7 +175,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     function __c3_build_cobertura_report(PHP_CodeCoverage $codeCoverage, $path)
     {
         if (!class_exists(\SebastianBergmann\CodeCoverage\Report\Cobertura::class)) {
-            throw new Exception("Cobertura report requires php-code-coverage >= 9.2");
+            throw new Exception('Cobertura report requires php-code-coverage >= 9.2');
         }
         $writer = new \SebastianBergmann\CodeCoverage\Report\Cobertura();
         $writer->process($codeCoverage, $path . '.cobertura.xml');
